@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Spam Detection</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f8;
+            padding: 20px;
+            text-align: center;
+        }
+        #blocks-container {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .block {
+            background-color: #b0e0e6;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: grab;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.2s;
+        }
+        .block:hover {
+            background-color: #87cefa;
+        }
+        #drop-zone {
+            border: 2px dashed #1e90ff;
+            padding: 40px;
+            background-color: #e6f7ff;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        #generated-email {
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 80%;
+            text-align: left;
+        }
+        #result {
+            font-size: 18px;
+            margin-top: 20px;
+            color: #ff4500;
+        }
+    </style>
+</head>
+<body>
+    <h1>Email Spam Detection Simulation</h1>
+    <p>Drag and drop blocks into the workspace to simulate email spam detection:</p>
+    
+    <div id="blocks-container">
+        <div class="block" id="email-generator" draggable="true">Generate Random Email</div>
+        <div class="block" id="check-spam" draggable="true">Check for Spam Words</div>
+        <div class="block" id="determine-status" draggable="true">Determine Spam Status</div>
+    </div>
+
+    <h2>Workspace</h2>
+    <div id="drop-zone">Drop blocks here</div>
+    
+    <p id="generated-email"></p>
+    <p id="result"></p>
+
+    <script>
+        const blocks = document.querySelectorAll('.block');
+        const dropZone = document.getElementById('drop-zone');
+        const generatedEmail = document.getElementById('generated-email');
+        const result = document.getElementById('result');
+
+        const spamWords = ['win', 'free', 'prize', 'money', 'urgent', 'limited offer'];
+
+        function getRandomEmail() {
+            const emails = [
+                "Congratulations! You have won a free prize. Claim it now!",
+                "Meeting at 3 PM to discuss project updates.",
+                "Limited offer: Get your bonus money now!",
+                "Lunch plans for tomorrow?",
+                "Important: Urgent response needed for your account.",
+            ];
+            return emails[Math.floor(Math.random() * emails.length)];
+        }
+
+        function highlightSpamWords(email) {
+            return email.split(' ').map(word => 
+                spamWords.includes(word.toLowerCase()) ? `<mark>${word}</mark>` : word
+            ).join(' ');
+        }
+
+        blocks.forEach(block => {
+            block.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', e.target.id);
+            });
+        });
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const blockId = e.dataTransfer.getData('text/plain');
+            if (blockId === 'email-generator') {
+                const email = getRandomEmail();
+                generatedEmail.innerHTML = email;
+                result.innerText = ''; // Clear previous result
+            } else if (blockId === 'check-spam' && generatedEmail.innerHTML) {
+                generatedEmail.innerHTML = highlightSpamWords(generatedEmail.innerText);
+            } else if (blockId === 'determine-status' && generatedEmail.innerHTML) {
+                const isSpam = spamWords.some(word => 
+                    generatedEmail.innerText.toLowerCase().includes(word)
+                );
+                result.innerText = isSpam ? "This email is SPAM!" : "This email is NOT spam.";
+            }
+        });
+    </script>
+</body>
+</html>

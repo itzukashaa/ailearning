@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Learning for Kids</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            margin: 20px;
+        }
+        h1, h2, h3 {
+            text-align: center;
+            color: #007BFF;
+        }
+        p {
+            max-width: 800px;
+            margin: 10px auto;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .item {
+            border: 2px solid #FF69B4;
+            padding: 10px;
+            margin: 5px;
+            background-color: #FFB6C1;
+            border-radius: 8px;
+            text-align: center;
+            cursor: grab;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .drop-zone {
+            border: 2px dashed #007BFF;
+            padding: 20px;
+            margin: 10px;
+            min-width: 300px;
+            min-height: 100px;
+            background-color: #f0f8ff;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .drop-zone:hover {
+            background-color: #e0f7fa;
+        }
+        .button {
+            background-color: #32CD32;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(0, 128, 0, 0.2);
+        }
+        .button:hover {
+            background-color: #228B22;
+        }
+        #result {
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+            color: #FF4500;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <img src="learningai.png" alt="" style="max-width: 100%; justify-content: center; margin-left:50px; margin-right: auto; border: 10px solid #000000; border-radius: 15px;">
+    <h1 style="font-size: 50px">Welcome to Learning AI!</h1>
+    
+    <p>Hey there, little explorer! Today, we're going to learn about how we teach computers. Imagine that teaching a computer is like teaching your pet to do tricks. You need to show it what to do. But first, let’s learn about what data is!</p>
+
+    <h2>What is Data?</h2>
+    <p>Data is like a bunch of fun puzzle pieces. Some pieces tell us what things are (labels), and some pieces tell us what things look like (features). For example, if you see a picture of a cat, the picture is a feature, and calling it a "cat" is the label.</p>
+
+    <h2>What is Preprocessing?</h2>
+    <p>Preprocessing is like getting your puzzle pieces ready to use. It’s when we make sure all our pieces are clean and organized so the computer doesn’t get confused.</p>
+
+    <h2>Types of Learning</h2>
+    <p>There are two main types of learning for computers:</p>
+    <ul>
+        <p><li><strong>Supervised Learning</strong>: This is like when your teacher shows you how to draw a circle and then asks you to draw one. You learn by example, using both features and labels.</li></p>
+        <p><li><strong>Unsupervised Learning</strong>: This is like when you have a box of crayons and paper, and you start drawing without being told what to make. The computer learns from features but without labels.</li></p>
+    </ul>
+
+    <h3>Now, let’s play a game to learn more!</h3>
+
+    <h3>Labels</h3>
+    <div class="container" id="label-container">
+        <div class="item" draggable="true">Label 1</div>
+        <div class="item" draggable="true">Label 2</div>
+        <div class="item" draggable="true">Label 3</div>
+    </div>
+    
+    <h3>Features</h3>
+    <div class="container" id="feature-container">
+        <div class="item" draggable="true">Feature 1</div>
+        <div class="item" draggable="true">Feature 2</div>
+        <div class="item" draggable="true">Feature 3</div>
+    </div>
+    
+    <h3>Drag and drop labels and features below:</h3>
+    <div class="drop-zone" id="drop-zone">
+        Drop items here
+    </div>
+    
+    <button class="button" onclick="checkLearningType()">Check Learning Type</button>
+    
+    <p id="result"></p>
+
+    <script>
+        const items = document.querySelectorAll('.item');
+        const dropZone = document.getElementById('drop-zone');
+        const result = document.getElementById('result');
+
+        items.forEach(item => {
+            item.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', e.target.innerText);
+            });
+        });
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.style.backgroundColor = '#e0f7fa';
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.style.backgroundColor = '#f0f8ff';
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.style.backgroundColor = '#f0f8ff';
+            const data = e.dataTransfer.getData('text/plain');
+            const newItem = document.createElement('div');
+            newItem.classList.add('item');
+            newItem.innerText = data;
+            dropZone.appendChild(newItem);
+        });
+
+        function checkLearningType() {
+            const itemsInDropZone = dropZone.querySelectorAll('.item');
+            let hasLabel = false;
+            let hasFeature = false;
+
+            itemsInDropZone.forEach(item => {
+                if (item.innerText.includes('Label')) {
+                    hasLabel = true;
+                }
+                if (item.innerText.includes('Feature')) {
+                    hasFeature = true;
+                }
+            });
+
+            if (hasLabel && hasFeature) {
+                result.innerText = "This is Supervised Learning. Explanation: Supervised learning requires both features and labels.";
+            } else if (hasFeature && !hasLabel) {
+                result.innerText = "This is Unsupervised Learning. Explanation: Unsupervised learning only uses features without labels.";
+            } else {
+                result.innerText = "Please add some features must be in the drop zone to determine the learning type.";
+            }
+        }
+    </script>
+</body>
+</html>
